@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>DevOps Lab - Login</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:Arial; background:linear-gradient(135deg,#667eea,#764ba2);
+           display:flex; justify-content:center; align-items:center; height:100vh; }
+    .card { background:white; padding:40px; border-radius:16px;
+            box-shadow:0 20px 60px rgba(0,0,0,0.3); width:350px; }
+    h2 { text-align:center; color:#333; margin-bottom:24px; }
+    input { width:100%; padding:12px; margin:8px 0 16px;
+            border:2px solid #eee; border-radius:8px; font-size:14px; }
+    button { width:100%; padding:12px; background:#667eea; color:white;
+             border:none; border-radius:8px; font-size:16px; cursor:pointer; }
+    #msg { text-align:center; margin-top:16px; font-weight:bold; font-size:15px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Login Portal</h2>
+    <input type="text" id="user" placeholder="Username: admin" />
+    <input type="password" id="pass" placeholder="Password: admin123" />
+    <button onclick="doLogin()">Login</button>
+    <p id="msg"></p>
+  </div>
+  <script>
+    async function doLogin() {
+      try {
+        const res = await fetch('http://54.145.59.200:3000/login', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({
+            username: document.getElementById('user').value,
+            password: document.getElementById('pass').value
+          })
+        });
+        const data = await res.json();
+        const msg = document.getElementById('msg');
+        msg.style.color = data.success ? 'green' : 'red';
+        msg.textContent = data.message;
+      } catch(e) {
+        document.getElementById('msg').textContent = 'Server not reachable';
+        document.getElementById('msg').style.color = 'orange';
+      }
+    }
+  </script>
+</body>
+</html>
